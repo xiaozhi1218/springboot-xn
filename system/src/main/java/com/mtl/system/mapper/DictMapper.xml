@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mtl.system.mapper.DictMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="dictResultMap" type="com.mtl.system.domain.Dict">
+        <id column="id" property="id"/>
+        <result column="create_by" property="createBy"/>
+        <result column="create_time" property="createTime"/>
+        <result column="del_flag" property="delFlag"/>
+        <result column="update_by" property="updateBy"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="description" property="description"/>
+        <result column="title" property="title"/>
+        <result column="type" property="type"/>
+        <result column="sort_order" property="sortOrder"/>
+    </resultMap>
+
+
+    <select id="selectDictPage" resultMap="dictResultMap">
+        select * from mtl_dict where is_deleted = 0
+    </select>
+
+</mapper>

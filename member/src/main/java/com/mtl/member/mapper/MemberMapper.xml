@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mtl.member.mapper.MemberMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="memberResultMap" type="com.mtl.member.domain.Member">
+        <id column="member_id" property="memberId"/>
+        <result column="agent_id" property="agentId"/>
+        <result column="parent_id" property="parentId"/>
+        <result column="lv_id" property="lvId"/>
+        <result column="user_name" property="userName"/>
+        <result column="email" property="email"/>
+        <result column="password" property="password"/>
+        <result column="regtime" property="regtime"/>
+        <result column="name" property="name"/>
+        <result column="sex" property="sex"/>
+        <result column="birthday" property="birthday"/>
+        <result column="advance" property="advance"/>
+        <result column="province_id" property="provinceId"/>
+        <result column="city_id" property="cityId"/>
+        <result column="region_id" property="regionId"/>
+        <result column="town_id" property="townId"/>
+        <result column="province" property="province"/>
+        <result column="city" property="city"/>
+        <result column="region" property="region"/>
+        <result column="town" property="town"/>
+        <result column="address" property="address"/>
+        <result column="zip" property="zip"/>
+        <result column="mobile" property="mobile"/>
+        <result column="tel" property="tel"/>
+        <result column="balance" property="balance"/>
+        <result column="mmc_money" property="mmcMoney"/>
+        <result column="charge_money" property="chargeMoney"/>
+        <result column="income_money" property="incomeMoney"/>
+        <result column="consume_money" property="consumeMoney"/>
+        <result column="point" property="point"/>
+        <result column="consume_point" property="consumePoint"/>
+        <result column="over_points" property="overPoints"/>
+        <result column="Pending_profit" property="pendingProfit"/>
+        <result column="over_profit" property="overProfit"/>
+        <result column="consume_profit" property="consumeProfit"/>
+        <result column="rebate" property="rebate"/>
+        <result column="mp" property="mp"/>
+        <result column="QQ" property="qq"/>
+        <result column="msn" property="msn"/>
+        <result column="remark" property="remark"/>
+        <result column="lastlogin" property="lastlogin"/>
+        <result column="is_agent" property="isAgent"/>
+        <result column="logincount" property="logincount"/>
+        <result column="is_checked" property="isChecked"/>
+        <result column="registerip" property="registerip"/>
+        <result column="recommend_point_state" property="recommendPointState"/>
+        <result column="last_send_email" property="lastSendEmail"/>
+        <result column="info_full" property="infoFull"/>
+        <result column="find_code" property="findCode"/>
+        <result column="face" property="face"/>
+        <result column="nickname" property="nickname"/>
+        <result column="midentity" property="midentity"/>
+        <result column="disabled" property="disabled"/>
+        <result column="avatar" property="avatar"/>
+        <result column="reason" property="reason"/>
+        <result column="member_fee" property="memberFee"/>
+        <result column="real_name" property="realName"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="id_card" property="idCard"/>
+        <result column="state" property="state"/>
+        <result column="type" property="type"/>
+        <result column="open_id" property="openId"/>
+        <result column="over_money" property="overMoney"/>
+        <result column="valid_time" property="validTime"/>
+        <result column="parent_type" property="parentType"/>
+    </resultMap>
+
+
+    <select id="selectMemberPage" resultMap="memberResultMap">
+        select * from mtl_member where is_deleted = 0
+    </select>
+
+</mapper>

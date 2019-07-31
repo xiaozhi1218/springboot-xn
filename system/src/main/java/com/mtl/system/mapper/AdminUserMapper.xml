@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mtl.system.mapper.AdminUserMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="adminuserResultMap" type="com.mtl.system.domain.AdminUser">
+        <id column="userid" property="userid"/>
+        <result column="username" property="username"/>
+        <result column="password" property="password"/>
+        <result column="phone" property="phone"/>
+        <result column="avatar" property="avatar"/>
+        <result column="state" property="state"/>
+        <result column="realname" property="realname"/>
+        <result column="regions_id" property="regionsId"/>
+        <result column="remark" property="remark"/>
+        <result column="create_time" property="createTime"/>
+        <result column="creator" property="creator"/>
+        <association property="role" javaType="com.mtl.system.domain.Role">
+            <id column="role_id" property="roleId"/>
+            <result column="role_name" property="roleName"/>
+            <result column="regions_id" property="regionsId"/>
+            <result column="regions_name" property="regionsName"/>
+            <result column="auth_action" property="authAction"/>
+            <result column="auth_url" property="authUrl"/>
+        </association>
+
+
+    </resultMap>
+
+    <select id="adminLogin" resultMap="adminuserResultMap">
+        select  * from mtl_adminuser where username=#{username} and password=#{password}
+    </select>
+
+    <select id="findByUsername" resultMap="adminuserResultMap">
+        select a.*,r.auth_action,r.auth_url,r.role_name,r.regions_id from mtl_adminuser a
+         left join mtl_role r on a.role_id=r.role_id
+         where username=#{username}
+    </select>
+
+
+   <!--按条件查找用户-->
+    <select id="selectByCondition" resultType="com.mtl.system.domain.vo.UserVo" parameterType="String">
+        select userid,username,phone,avatar,state,realname,regions_id as regionsId,
+        (select r.local_name from mtl_regions r where r.region_id=a.regions_id) as regionsName,
+        (select count(*) from mtl_regions r where r.admin_user_id=a.userid) as isRegionAdmin
+        ,remark,create_time as createTime,creator,
+        (select username from mtl_adminuser where userid=a.creator) as creatorName
+        from mtl_adminuser a
+        <where>
+            <if test="searchKey!=null and searchKey!=''">
+                or username like concat('%',#{searchKey},'%')
+                or realname like concat('%',#{searchKey},'%')
+                or phone like concat('%',#{searchKey},'%')
+            </if>
+        </where>
+    </select>
+
+
+    <select id="selectnameById" resultType="java.lang.String" parameterType="java.lang.Integer">
+       select  a.username from mtl_adminuser a where a.userid=#{id}
+    </select>
+
+
+    <select id="findAdminFromRegions" resultMap="adminuserResultMap">
+       select  * from mtl_adminuser a where a.userid=
+        (select r.admin_user_id from mtl_regions r WHERE r.region_id=#{regionId})
+    </select>
+
+    <update id="changeRegionAdmin" >
+        UPDATE mtl_regions r SET r.admin_user_id=#{userId}
+        WHERE r.region_id=#{regionId}
+    </update>
+
+    <update id="clearRegionAdmin" >
+        UPDATE mtl_regions r SET r.admin_user_id=null
+        WHERE r.admin_user_id=#{userId}
+    </update>
+
+</mapper>

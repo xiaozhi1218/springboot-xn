@@ -1,0 +1,48 @@
+package $!{package.ServiceImpl};
+
+import $!{package.Entity}.$!{entity};
+import $!{package.Mapper}.$!{table.mapperName};
+import $!{package.Service}.$!{table.serviceName};
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import com.github.pagehelper.PageHelper;
+import com.mtl.common.tool.model.Page;
+
+import java.util.List;
+/**
+ * $!{table.comment} 服务实现类
+ *
+ * @author $!{author}
+ * @since $!{date}
+ */
+@Service
+public class $!{table.serviceImplName} implements $!{table.serviceName} {
+
+    @Autowired
+    private $!{table.mapperName} $!{table.entityPath}Mapper;
+
+    @Override
+    public $!{entity} findById(Integer id) {
+        return $!{table.entityPath}Mapper.selectByPrimaryKey(id);
+    }
+
+    @Override
+    public Page<$!{entity}> findPage(Integer page, Integer size) {
+        PageHelper.startPage(page,size);
+        List<$!{entity}> $!{table.entityPath}s=$!{table.entityPath}Mapper.selectAll();
+        return new Page<>($!{table.entityPath}s);
+    }
+
+    @Override
+    public int saveOrUpdate($!{entity} $!{table.entityPath}) {
+        if($!{table.entityPath}.get$!{keyPropertyName.substring(0, 1).toUpperCase()}$!{keyPropertyName.substring(1)}()!=null){
+        return $!{table.entityPath}Mapper.updateByPrimaryKey($!{table.entityPath});
+        }
+        return $!{table.entityPath}Mapper.insert($!{table.entityPath});
+    }
+
+    @Override
+    public int deleteBatch(List<Integer> ids) {
+        return $!{table.entityPath}Mapper.deleteByIdList(ids);
+    }
+}

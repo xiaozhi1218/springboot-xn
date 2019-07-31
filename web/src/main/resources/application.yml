@@ -1,0 +1,154 @@
+server:
+  port: 8080
+spring:
+  cache:
+    ehcache:
+      config: classpath:config/ehcache.xml
+  resources:
+    static-locations: classpath:/static/
+  datasource:
+    type: com.zaxxer.hikari.HikariDataSource
+    url: jdbc:mysql://localhost:3306/mtl-xn?serverTimezone=GMT%2B8&useUnicode=true&characterEncoding=utf8&allowMultiQueries=true
+    username: root
+    password: 1234
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    hikari:
+      minimum-idle: 3
+      idle-timeout: 10000
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    # Redis
+  redis:
+    host: 127.0.0.1
+    password:
+    # 数据库索引 默认0
+    database: 0
+    port: 6379
+    jedis:
+      pool:
+        max-idle: 8
+        max-active: 1000
+    # 超时时间 Duration类型 3秒
+    timeout: 3S
+  security:
+    user:
+      name: user
+      password: 123
+
+mybatis:
+  mapper-locations: classpath:com/mtl/**/.mapper/*Mapper.xml
+  type-aliases-package: com.mtl.**.domain
+
+pagehelper:
+  params: count=countSql
+  reasonable: false
+  support-methods-arguments: true
+
+#swagger配置信息
+swagger:
+  title: MTL 接口文档系统
+  description: MTL 接口文档系统
+  version: 2.0.0
+  license: Powered By MTL
+  licenseUrl: http://mtlyn.com
+  terms-of-service-url: http://mtlyn.com
+  contact:
+    name: lsc
+    email: lsc0630@tom.com
+    url: http://gitee.com/xxx
+
+#配置日志地址
+logging:
+  config: classpath:log/logback_dev.xml
+  level:
+    com.mtl: debug
+    org.springframework.boot.autoconfigure: error
+generator:
+  path:
+    controller: controller
+    service: service.impl
+    interf: service
+    dao: dao
+    entity: entity
+    mapper: mappers
+mtl:
+  # 全局限流
+  rateLimit:
+    enable: true
+    # 每1秒内
+    timeout: 1000
+    # 总限制100个请求
+    limit: 100
+  # token交互方式
+  token:
+    # 默认JWT 启用Redis后设置为true后，token将存入redis，并具有单点登录功能
+    redis: false
+  # token过期时间（分钟）
+  tokenExpireTime: 60
+  # 用户选择保存登录状态对应token过期时间（天）
+  saveLoginTime: 7
+  # 限制用户登陆错误次数（次）
+  loginTimeLimit: 10
+  # 错误超过次数后多少分钟后才能继续登录（分钟）
+  loginAfterTime: 10
+  # ES
+  elasticsearch:
+    nodeClient: 127.0.0.1:9200
+  # 日志记录方式 true使用Elasticsearch记录 false记录至数据库中
+  logRecord:
+    es: false
+  # 七牛云配置
+  qiniu:
+    accessKey: BbThz4OM3VTuj5wxEeoAUoyokP_zzcW-goaU5Kb_
+    secretKey: fTdyrKMbMEVbuBRy4TzxgzN9dxFfVaGmsTfv3zx6
+    bucket: yhld
+    domain: http://assets.mtlyn.com/
+    # 存储区域 -1自动判断 0华东 1华北 2华南 3北美 4东南亚
+    zone: 0
+# 忽略鉴权url
+ignored:
+  urls:
+    - /webjars/**
+    - /v2/api-docs/**
+    - /v2/api-docs-ext/**
+    - /swagger-resources/**
+    - /admin/needLogin
+    - /gen/**
+    - /**/*.js
+    - /**/*.css
+    - /**/*.png
+    - /**/*.ico
+    - /doc.html
+    - /goodsspec/**
+    - /merchant/**
+    - /merchant/merchant/login
+    - /api/member/login
+    - /api/**
+    - /ueditor/exec
+    - /image/imageUpload
+    - /image/delImage
+    - /**/*
+
+# 七牛云配置
+# bucket是创建的存储空间名
+# path对应存储空间的访问域名
+qiniu:
+  accessKey: BbThz4OM3VTuj5wxEeoAUoyokP_zzcW-goaU5Kb_
+  secretKey: fTdyrKMbMEVbuBRy4TzxgzN9dxFfVaGmsTfv3zx6
+  bucket: yhld
+  cdnPrefix: http://assets.mtlyn.com/
+server_domain: lsc.mynatapp.cc
+wechat:
+  mp:
+    app-id:
+    secret:
+    token:
+    aes-key:
+  pay:
+    app-id:
+    key-path:
+    mch-id:
+    mch-key:
+  wxmini:
+    app-id:
+    secret:

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mtl.system.mapper.RoleMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="roleResultMap" type="com.mtl.system.domain.Role">
+        <id column="role_id" property="roleId"/>
+        <result column="role_name" property="roleName"/>
+        <result column="regions_id" property="regionsId"/>
+        <result column="regions_name" property="regionsName"/>
+        <result column="auth_action" property="authAction"/>
+        <result column="auth_url" property="authUrl"/>
+    </resultMap>
+
+
+    <select id="selectRolePage" resultMap="roleResultMap">
+        select * from mtl_role where is_deleted = 0
+    </select>
+
+    <select id="selectByCondition" resultMap="roleResultMap">
+        select role_id,role_name,regions_id,(select re.local_name  from mtl_regions re where re.region_id=r.regions_id)as regions_name
+        from mtl_role r
+        <where>
+            <if test="searchKey!=null and searchKey!=''">
+                or role_name like concat('%',#{searchKey},'%')
+            </if>
+        </where>
+    </select>
+
+    <!--查找角色有没有关联的用户-->
+    <select id="selectAdminByRole" resultType="java.lang.Integer">
+         SELECT count(*)
+    FROM mtl_adminuser a
+    where a.role_id=#{roleId}
+    </select>
+
+    <select id="selectAuthUrls" resultMap="roleResultMap">
+        SELECT * from mtl_role WHERE role_id=(SELECT role_id FROM mtl_adminuser WHERE userid=#{id})
+    </select>
+
+</mapper>

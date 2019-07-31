@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mtl.system.mapper.RegionsMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="regionsResultMap" type="com.mtl.system.domain.Regions">
+        <id column="region_id" property="id"/>
+        <result column="p_region_id" property="parentId"/>
+        <result column="region_path" property="regionPath"/>
+        <result column="region_grade" property="regionGrade"/>
+        <result column="local_name" property="localName"/>
+        <result column="zipcode" property="zipcode"/>
+        <result column="admin_user_id" property="adminUserId"/>
+    </resultMap>
+
+
+    <resultMap id="treeNodeResultMap" type="com.mtl.system.domain.vo.RegionsVO">
+        <id column="region_id" property="id"/>
+        <result column="p_region_id" property="parentId"/>
+        <result column="local_name" property="localName"/>
+        <result column="region_path" property="regionPath"/>
+        <result column="region_grade" property="regionGrade"/>
+        <result column="zipcode" property="zipcode"/>
+        <result column="admin_user_id" property="adminUserId"/>
+        <result column="admin_user_name" property="adminUserName"/>
+    </resultMap>
+
+    <!--查找区域所在用户个数-->
+    <select id="selectUserInRegion" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+      SELECT COUNT(*)
+      FROM mtl_adminuser a
+      WHERE a.regions_id=#{id}
+    </select>
+
+    <!--查找区域所在角色个数-->
+    <select id="selectRoleInRegion" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+      SELECT COUNT(*)
+      FROM mtl_role r
+      WHERE r.regions_id=#{id}
+    </select>
+
+    <!--删除区域-->
+    <delete id="deleteRegionsVO" parameterType="java.lang.Integer">
+      DELETE FROM mtl_regions
+      WHERE region_id=#{id}
+    </delete>
+
+    <!--修改区域-->
+    <update id="updateRegionsVO">
+    UPDATE mtl_regions
+    SET p_region_id = #{regionsVO.parentId},
+    region_path = #{regionsVO.regionPath},
+    region_grade = #{regionsVO.regionGrade},
+    local_name = #{regionsVO.localName},
+    zipcode = #{regionsVO.zipcode},
+    admin_user_id = #{regionsVO.adminUserId}
+    WHERE region_id = #{regionsVO.id}
+
+    </update>
+
+    <!--新增区域-->
+    <insert id="insertRegionsVO" useGeneratedKeys="true" keyProperty="id" parameterType="com.mtl.system.domain.Regions">
+      INSERT INTO mtl_regions (p_region_id,region_path,region_grade,local_name,zipcode)
+      VALUES ( #{regionsVO.parentId},#{regionsVO.regionPath},#{regionsVO.regionGrade},#{regionsVO.localName},#{regionsVO.zipcode} )
+
+    </insert>
+
+    <!--通过id查找区域-->
+    <select id="selectRegions" resultMap="regionsResultMap" parameterType="java.lang.Integer">
+        SELECT region_id,p_region_id,local_name,region_path,region_grade,zipcode,admin_user_id
+        from mtl_regions r
+        where r.region_id=#{id}
+    </select>
+
+    <!--查找区域树-->
+    <select id="regions" resultMap="treeNodeResultMap" parameterType="java.lang.Integer">
+        SELECT region_id,p_region_id,local_name,region_path,region_grade,zipcode,admin_user_id,
+        (select a.username from mtl_adminuser a WHERE a.userid=r.admin_user_id)as admin_user_name
+        from mtl_regions r
+        <if test="ids.length>0">
+            WHERE
+            r.region_id IN
+            <foreach collection="ids" item="item" index="index" open="("
+                     separator="," close=")">
+                #{item}
+            </foreach>
+
+        </if>
+        <if test="ids.length==0">
+            WHERE r.p_region_id=-1
+
+        </if>
+    </select>
+
+    <select id="regionsList" resultMap="treeNodeResultMap" parameterType="java.lang.Integer">
+        SELECT region_id,p_region_id ,local_name,region_path,region_grade,zipcode,admin_user_id
+        from mtl_regions r WHERE
+        <if test="ids!=null and ids!=''">
+            r.region_id =#{ids}
+        </if>
+        <if test="ids==null and ids==''">
+            and
+            r.region_id IN (-1)
+        </if>
+    </select>
+
+    <!--找出该用户的区域-->
+    <select id="authRegionsIds" resultType="java.lang.Integer" parameterType="java.lang.Integer">
+      select  r.region_id from mtl_regions r
+        <if test="id==1">
+
+        </if>
+        <if test="id!=1">
+           WHERE r.admin_user_id=#{id}
+           or r.p_region_id IN(
+           select  re.region_id
+           from mtl_regions re
+           WHERE re.admin_user_id=#{id}
+           )
+        </if>
+    </select>
+
+
+    <select id="findByParentId" resultType="java.lang.Integer" parameterType="int">
+        select count(id) from mtl_regions where p_region_id=#{id}
+    </select>
+
+
+    <select id="selectRegionsPage" resultMap="regionsResultMap">
+        select * from mtl_regions where is_deleted = 0
+    </select>
+
+</mapper>

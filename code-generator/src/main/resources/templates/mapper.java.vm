@@ -1,0 +1,21 @@
+package $!{package.Mapper};
+
+import $!{package.Entity}.$!{entity};
+import org.springframework.stereotype.Repository;
+import tk.mybatis.mapper.additional.idlist.IdListMapper;
+import tk.mybatis.mapper.common.BaseMapper;
+import java.util.List;
+
+/**
+ * $!{table.comment} Mapper 接口
+ *
+ * @author $!{author}
+ * @since $!{date}
+ */
+#if($!{kotlin})
+interface $!{table.mapperName} : $!{superMapperClass}<$!{entity}>
+#else
+@Repository
+public interface $!{table.mapperName}  extends BaseMapper<$!{entity}>, IdListMapper<$!{entity},Integer>{
+}
+#end

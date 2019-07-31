@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mtl.system.mapper.SettingsMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="settingsResultMap" type="com.mtl.system.domain.Settings">
+        <id column="id" property="id"/>
+        <result column="code" property="code"/>
+        <result column="cfg_value" property="cfgValue"/>
+        <result column="cfg_group" property="cfgGroup"/>
+    </resultMap>
+
+
+    <select id="selectSettingsPage" resultMap="settingsResultMap">
+        select * from mtl_settings where is_deleted = 0
+    </select>
+
+</mapper>

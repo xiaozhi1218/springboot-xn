@@ -1,0 +1,25 @@
+package $!{package.Service};
+
+import $!{package.Entity}.$!{entity};
+import com.mtl.common.tool.model.Page;
+import java.util.List;
+/**
+ * $!{table.comment} 服务类
+ *
+ * @author $!{author}
+ * @since $!{date}
+ */
+#if($!{kotlin})
+interface $!{table.serviceName} : $!{superServiceClass}<$!{entity}>
+#else
+public interface $!{table.serviceName} {
+
+        $!{entity} findById(Integer id);
+
+        Page<$!{entity}> findPage(Integer page,Integer size);
+
+        int saveOrUpdate($!{entity} $!{table.entityPath});
+
+        int deleteBatch(List<Integer> ids);
+}
+#end
